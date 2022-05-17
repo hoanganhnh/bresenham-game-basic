@@ -16,13 +16,50 @@ function getMargin(columns: number) {
     return Math.abs(window.innerWidth / 2 - (50 * columns) / 2);
 }
 
-function drawPoint(x: number, y: number) {
+function drawPoint(x: number, y: number, styleClass: "start" | "final") {
     if (table?.rows[x].cells[y].hasAttribute("class")) {
         const attClass = table.rows[x].cells[y].getAttribute("class");
-        table.rows[x].cells[y].setAttribute("class", attClass + " start");
+        table.rows[x].cells[y].setAttribute(
+            "class",
+            attClass + ` ${styleClass}`
+        );
     } else {
-        table.rows[x].cells[y].setAttribute("class", "start");
+        table.rows[x].cells[y].setAttribute("class", styleClass);
     }
+}
+
+function bresenhamLine(x1: number, y1: number, x2: number, y2: number) {
+    if (x2 == x1 && y2 == y1) {
+        drawPoint(x1, y1, "final");
+        return;
+    }
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const sx = dx < 0 ? -1 : 1;
+    const sy = dy < 0 ? -1 : 1;
+
+    if (Math.abs(dy) < Math.abs(dx)) {
+        const m = dy / dx;
+        const b = y1 - m * x1;
+        const temp = Math.round(m * x1 + b);
+
+        while (x1 !== x2) {
+            drawPoint(temp, y1, "final");
+            x1 += sx;
+        }
+    } else {
+        const m = dx / dy;
+        const b = x1 - m * y1;
+        const temp = Math.round(m * y1 + b);
+
+        while (y1 !== y2) {
+            drawPoint(temp, y1, "final");
+            y1 += sy;
+        }
+    }
+
+    drawPoint(x2, y2, "final");
 }
 
 submitBtn?.addEventListener("click", () => {
@@ -69,9 +106,14 @@ submitBtn?.addEventListener("click", () => {
         table.innerHTML = html;
     }
     // start point
-    drawPoint(0, 0);
+    drawPoint(0, 0, "start");
     // end point
-    drawPoint(rows - 1, columns - 1);
+    drawPoint(rows - 1, columns - 1, "start");
+});
+
+solveBtn?.addEventListener("click", function () {
+    bresenhamLine(0, 0, rows - 1, columns - 1);
+    nextBtn?.removeAttribute("hidden");
 });
 
 // init game
