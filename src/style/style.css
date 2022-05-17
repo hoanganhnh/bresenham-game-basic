@@ -68,13 +68,18 @@ button:active {
 /*styles for the bresenham generated table
 */
 #data {
+    display: flex;
     margin-top: 30px;
     margin-bottom: 20px;
 }
+
+#gameTable {
+    margin: 0 auto;
+}
 /*styles for the difficuly drop down menu*/
 #menu {
-    border: border solid teal;
-    width: 100px;
+    border: solid teal;
+    width: 128px;
     height: 25px;
     border-radius: 5px;
     font-size: 100%;
@@ -87,6 +92,10 @@ button:active {
 }
 option {
     font-weight: bold;
+}
+
+#para {
+    margin-bottom: 24px;
 }
 /*styles for the highlighting the table cells
 clicked is user input
