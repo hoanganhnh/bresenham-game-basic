@@ -52,13 +52,36 @@ function bresenhamLine(x0: number, y0: number, x1: number, y1: number) {
         const m = dx / dy;
         const b = x0 - m * y0;
 
-        while (y0 != y1) {
+        while (y0 !== y1) {
             drawPoint(Math.round(m * y0 + b), y0, "final");
             y0 += sy;
         }
     }
 
     drawPoint(x1, y1, "final");
+}
+
+function plotLine(x0: number, y0: number, x1: number, y1: number) {
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+
+    while (true) {
+        drawPoint(x0, y0, "final"); // Do what you need to for this
+
+        if (x0 === x1 && y0 === y1) break;
+        const e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
+    }
 }
 
 function increaseLevel(level: number) {
@@ -142,7 +165,6 @@ submitBtn?.addEventListener("click", () => {
     switch (parseInt(difficulty)) {
         case 1:
             if (levelDecoration !== null) {
-                // @ts-ignore
                 levelDecoration.setAttribute(
                     "style",
                     "color:lime; font-weight:bolder;"
